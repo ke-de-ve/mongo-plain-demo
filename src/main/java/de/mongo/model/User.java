@@ -1,4 +1,4 @@
-package de.mongo;
+package de.mongo.model;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
