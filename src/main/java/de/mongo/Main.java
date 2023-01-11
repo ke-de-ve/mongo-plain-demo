@@ -25,45 +25,53 @@ public class Main {
     public static void main(String[] args) {
         try (MongoClient mongoClient = MongoUtils.getMongoClientPojo(MONGO_URI) ) {
 
-            // Create database
-            mongoClient.getDatabase("chat");
+            MorphiaUtils.example(mongoClient);
 
-            //List all databases
-            System.out.printf("\ndatabases: %s\n\n", Arrays.deepToString(MongoUtils.getDatabases(mongoClient).toArray()));
+            MorphiaUtils.demo();
 
-            MongoCollection<Document> usersCollection = createUsers(mongoClient);
-
-            //List all databases
-            System.out.printf("\ndatabases: %s\n\n", Arrays.deepToString(MongoUtils.getDatabases(mongoClient).toArray()));
-
-            System.out.println("\nRead all users ...");
-            for (Document document : MongoUtils.getAllDocuments(usersCollection)) {
-                System.out.println(document);
-            }
-
-            System.out.println("\nRead all users with last name Doe ...");
-            for (Document document : MongoUtils.getAllDocuments(usersCollection, Filters.eq("lastName", "Doe"))) {
-                System.out.println(document);
-            }
-
-            Document userDoe = MongoUtils.findByFieldFirst(usersCollection, "lastName", "Doe");
-            System.out.printf("\nfind first user by last name (using document)\n%s\n", userDoe);
-
-            System.out.printf("\nfind first user by last name (using Bson filter)\n%s\n",
-                    MongoUtils.findByFieldFirst(usersCollection, Filters.eq("lastName", "Doe")));
-
-            // Update user
-            Bson filter = Filters.eq("_id", userDoe.get("_id"));
-            Bson updateOperation = Updates.set("email", "new.email.value@yahoo.com");
-            UpdateResult updateResult = usersCollection.updateOne(filter, updateOperation);
-            System.out.printf("=> Updating the doc with \"_ids\":\"%s\"}. changing email.\n", userDoe.get("_id"));
-            System.out.println(usersCollection.find(filter).first().toJson());
-            System.out.printf("updateResult: %s\n", updateResult);
-
-            // Delete all users
-            DeleteResult deleteResult = usersCollection.deleteMany(Filters.empty());
-            System.out.printf("\ndeleted %d documents", deleteResult.getDeletedCount());
+            plainPojoExample(mongoClient);
         }
+    }
+
+    private static void plainPojoExample(MongoClient mongoClient) {
+        // Create database
+        mongoClient.getDatabase("chat");
+
+        //List all databases
+        System.out.printf("\ndatabases: %s\n\n", Arrays.deepToString(MongoUtils.getDatabases(mongoClient).toArray()));
+
+        MongoCollection<Document> usersCollection = createUsers(mongoClient);
+
+        //List all databases
+        System.out.printf("\ndatabases: %s\n\n", Arrays.deepToString(MongoUtils.getDatabases(mongoClient).toArray()));
+
+        System.out.println("\nRead all users ...");
+        for (Document document : MongoUtils.getAllDocuments(usersCollection)) {
+            System.out.println(document);
+        }
+
+        System.out.println("\nRead all users with last name Doe ...");
+        for (Document document : MongoUtils.getAllDocuments(usersCollection, Filters.eq("lastName", "Doe"))) {
+            System.out.println(document);
+        }
+
+        Document userDoe = MongoUtils.findByFieldFirst(usersCollection, "lastName", "Doe");
+        System.out.printf("\nfind first user by last name (using document)\n%s\n", userDoe);
+
+        System.out.printf("\nfind first user by last name (using Bson filter)\n%s\n",
+                MongoUtils.findByFieldFirst(usersCollection, Filters.eq("lastName", "Doe")));
+
+        // Update user
+        Bson filter = Filters.eq("_id", userDoe.get("_id"));
+        Bson updateOperation = Updates.set("email", "new.email.value@yahoo.com");
+        UpdateResult updateResult = usersCollection.updateOne(filter, updateOperation);
+        System.out.printf("=> Updating the doc with \"_ids\":\"%s\"}. changing email.\n", userDoe.get("_id"));
+        System.out.println(usersCollection.find(filter).first().toJson());
+        System.out.printf("updateResult: %s\n", updateResult);
+
+        // Delete all users
+        DeleteResult deleteResult = usersCollection.deleteMany(Filters.empty());
+        System.out.printf("\ndeleted %d documents", deleteResult.getDeletedCount());
     }
 
     private static MongoCollection<Document> createUsers(MongoClient mongoClient) {

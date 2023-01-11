@@ -30,6 +30,10 @@ public class MongoUtils {
         return MongoClients.create(clientSettings);
     }
 
+    public static MongoClient getMongoClient(String mongoDbUri) {
+        return MongoClients.create(mongoDbUri);
+    }
+
     public static MongoDatabase createDatabase(MongoClient mongoClient, String dbName) {
         return mongoClient.getDatabase(dbName);
     }
