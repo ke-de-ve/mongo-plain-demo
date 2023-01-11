@@ -25,9 +25,11 @@ public class Main {
     public static void main(String[] args) {
         try (MongoClient mongoClient = MongoUtils.getMongoClientPojo(MONGO_URI) ) {
 
-            MorphiaUtils.example(mongoClient);
+            MorphiaDemos.demoChatUsingMorphia();
 
-            MorphiaUtils.demo();
+            MorphiaDemos.example(mongoClient);
+
+            MorphiaDemos.demoMorphia();
 
             plainPojoExample(mongoClient);
         }

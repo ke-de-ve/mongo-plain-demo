@@ -1,31 +1,32 @@
 package de.mongo.model;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import dev.morphia.annotations.*;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 import java.util.Objects;
 
+@Entity("user")
 @Getter
 @Setter
-@EqualsAndHashCode
 @Builder
+@EqualsAndHashCode
+@ToString
 public class User {
 
-    private ObjectId _id;
+    @Id
+    private ObjectId id;
     private String email;
     private String password;
     private String firstName;
     private String lastName;
 
     public User() {
-        this._id = ObjectId.get();
+        this.id = ObjectId.get();
     }
 
-    public User(ObjectId _id, String email, String password, String firstName, String lastName) {
-        this._id = Objects.requireNonNullElseGet(_id, ObjectId::get);
+    public User(ObjectId id, String email, String password, String firstName, String lastName) {
+        this.id = Objects.requireNonNullElseGet(id, ObjectId::get);
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -34,7 +35,10 @@ public class User {
 
     public String toJson() {
         return String.format("{\"_id\":\"%s\", \"email\":\"%s\", \"password\":\"%s\", \"firstName\":\"%s\", \"lastName\":\"%s\"}",
-                get_id(), getEmail(), getPassword(), getFirstName(), getLastName());
+                getId(), getEmail(), getPassword(), getFirstName(), getLastName());
     }
 
+    public String getName() {
+        return getFirstName() + " " + getLastName();
+    }
 }
